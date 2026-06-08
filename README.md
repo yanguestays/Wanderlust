@@ -241,17 +241,6 @@ score = weight × (1 / (k + rank))
 1. **离线阶段**：智谱 Embedding-2 将每个目的地的 `标题 + 国家 + 描述` 编码为 1024 维向量，存入 MySQL `LONGTEXT` 字段
 2. **在线阶段**：用户查询词实时向量化 → 与内存索引中的所有向量计算余弦相似度 → 阈值过滤(0.38) → Top-10
 
-## 🎯 应聘展示要点
-
-本项目适合 **AI 大模型应用开发 / RAG 工程师** 方向，展示了以下关键技能：
-
-- ✅ LLM API 调用与 Prompt Engineering（DeepSeek、智谱）
-- ✅ RAG 系统核心架构：意图理解 → 混合检索 → 融合排序
-- ✅ Embedding 向量的生成、存储与相似度计算
-- ✅ 双路并行检索的异步编程（CompletableFuture）
-- ✅ 混合检索结果的 RRF 融合算法
-- ✅ 全栈能力：Spring Boot + Vue 3 完整项目搭建
-- ✅ AI 产品的用户体验设计（自然语言搜索 + Markdown 回复渲染）
 
 ## 📝 API 概览
 
