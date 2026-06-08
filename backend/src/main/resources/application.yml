@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: wanderlust-ai
+
+  # 1. 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wanderlust?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${DB_PASSWORD:123456} # 从环境变量读取，默认值仅本地开发用
+
+  # 2. JPA 自动建表配置
+  jpa:
+    hibernate:
+      ddl-auto: update # 🔥 关键：自动根据 Entity 创建/更新表结构，不用手写 SQL
+    show-sql: true     # 在控制台打印 SQL，方便调试
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # 3. 文件上传限制 (Excel导入用)
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  # 4. AI 模型密钥配置 (从环境变量读取，避免密钥泄露)
+deepseek:
+  api:
+    url: https://api.deepseek.com/chat/completions
+    key: ${DEEPSEEK_API_KEY:your-deepseek-api-key}
+
+zhipu:
+  api:
+    url: https://open.bigmodel.cn/api/paas/v4/embeddings
+    key: ${ZHIPU_API_KEY:your-zhipu-api-key}
+
+

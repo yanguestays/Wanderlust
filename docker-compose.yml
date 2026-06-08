@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # ===========================================
+  # MySQL 数据库
+  # ===========================================
+  mysql:
+    image: mysql:8.0
+    container_name: wanderlust-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-123456}
+      MYSQL_DATABASE: wanderlust
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================
+  # Spring Boot 后端
+  # ===========================================
+  backend:
+    build: ./backend
+    container_name: wanderlust-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wanderlust?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+      DB_PASSWORD: ${DB_PASSWORD:-123456}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      ZHIPU_API_KEY: ${ZHIPU_API_KEY}
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ===========================================
+  # Vue 前端 (Nginx)
+  # ===========================================
+  frontend:
+    build: ./front
+    container_name: wanderlust-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
